@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Hero } from './hero';
 import { ActivatedRoute } from '@angular/router';
 import { HeroService } from './hero.service';
@@ -12,25 +12,46 @@ import { HeroService } from './hero.service';
 
 export class HeroDetailComponent implements OnInit, OnDestroy {
 
-  @Input()
-  hero: Hero;
-  sub;
+  @Input() hero: Hero;
+  @Output() close = new EventEmitter();
+  error: any;
+  sub: any;
+  navigated = false;
   
   constructor(private heroService: HeroService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      let id = +params['id'];
-      this.heroService.getHero(id)
-        .then(hero => this.hero = hero);
+      if (params['id'] !== undefined) {
+        let id = +params['id'];
+        this.navigated = true;
+        this.heroService.getHero(id)
+            .then(hero => this.hero = hero);
+      } else {
+        this.navigated = false;
+        this.hero = new Hero();
+      }
     });
   }
+
+  save() {
+    this.heroService
+        .save(this.hero)
+        .then(hero => {
+          this.hero = hero; // saved hero, w/ id if new
+          this.goBack(hero);
+        })
+        .catch(error => this.error = error); // TODO: Display error message
+  }
+
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
 
-  goBack() {
-    window.history.back();
+  goBack(savedHero: Hero = null) {
+    this.close.emit(savedHero);
+    if (this.navigated) { window.history.back(); }
   }
+
 }
