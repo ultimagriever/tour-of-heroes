@@ -1,0 +1,25 @@
+{
+  "name": "tour-of-heroes-ts",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Pamela Argentino <argentinopam@hotmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "typescript",
+    "es6"
+  ],
+  "homepage": "https://github.com/ultimagriever/tour-of-heroes-ts",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
