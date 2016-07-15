@@ -1,19 +1,7 @@
 import { Component } from '@angular/core';
 import { Hero } from './hero';
 import { HeroDetailComponent } from './hero-detail.component';
-
-const HEROES: Hero[] = [
-  { id: 11, name: 'Ultima' },
-  { id: 12, name: 'Bravegaria' },
-  { id: 13, name: 'Linca' },
-  { id: 14, name: 'Debbie' },
-  { id: 15, name: 'Gaius' },
-  { id: 16, name: 'Jinxey' },
-  { id: 17, name: 'Ambrizo' },
-  { id: 18, name: 'Rolo' },
-  { id: 19, name: 'Dante' },
-  { id: 20, name: 'Grave' }
-];
+import { HeroService } from './hero.service';
 
 @Component({
   selector: 'my-app',
@@ -77,7 +65,8 @@ const HEROES: Hero[] = [
         border-radius: 4px 0 0 4px;
       }
   `],
-  directives: [HeroDetailComponent]
+  directives: [HeroDetailComponent],
+  providers: [HeroService]
 })
 
 export class AppComponent { 
@@ -88,7 +77,17 @@ export class AppComponent {
   };
   selectedHero: Hero;
 
-  public heroes = HEROES;
+  public heroes;
+
+  getHeroes() {
+    this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+  }
+
+  ngOnInit() {
+    this.getHeroes();
+  }
+
+  constructor(private heroService: HeroService) { }
 
   onSelect(hero: Hero) { this.selectedHero = hero; }
 }
